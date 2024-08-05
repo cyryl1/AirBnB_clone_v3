@@ -61,7 +61,7 @@ def create_city(state_id):
         return (jsonify({
             "error": "Missing name"
             }), 400)
-    model = City(data["name"])
+    model = City(data)
     model.save()
     return (jsonify(model.to_dict()))
 
