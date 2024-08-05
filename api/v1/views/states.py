@@ -48,7 +48,7 @@ def handle_delete(state_id):
         return (jsonify({"error": "Not Found"}), 200)
 
 
-@app_views.route('/states', method=['POST'])
+@app_views.route('/states', methods=['POST'])
 def create_state():
     """
     Creates a new state
@@ -69,8 +69,7 @@ def create_state():
             "error": "Not a JSON"
             }), 400)
 
-
-@app_views.route('/states/<state_id>', method=['PUT'])
+@app_views.route('states/<state_id>', methods=['PUT'])
 def update_states(state_id):
     """
     Updates the states obj

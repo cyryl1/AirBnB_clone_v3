@@ -8,7 +8,7 @@ from api.v1.views import app_views
 from flask import jsonify, request
 
 
-@app_views_route("/api/v1/users",
+@app_views.route("/api/v1/users",
                  methods=["GET"])
 def get_users():
     """Returns all Users"""

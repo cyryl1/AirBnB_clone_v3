@@ -17,7 +17,7 @@ def get_amenities():
     return (jsonify(amenities))
 
 
-@app_view.route("/api/v1/amenities/<amenity_id>",
+@app_views.route("/api/v1/amenities/<amenity_id>",
                 methods=["GET"])
 def get_amenity(amenity_id):
     """Return the amenity with the
@@ -29,7 +29,7 @@ def get_amenity(amenity_id):
     return (jsonify(amenity.to_dict()))
 
 
-@app_view.route("/api/v1/amenities/<amenity_id>",
+@app_views.route("/api/v1/amenities/<amenity_id>",
                 methods=["DELETE"])
 def delete_amenity(amenity_id):
     """Delete the Amenity with the
