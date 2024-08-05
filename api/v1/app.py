@@ -4,8 +4,7 @@ A Flask applicaton
 """
 
 from flask import Flask, jsonify
-import storage
-import models
+from models import storage
 from api.v1.views import app_views
 
 app = Flask(__name__)
