@@ -13,7 +13,7 @@ def all_cities(state_id):
     """Returns all Cities with
     the specified state_id"""
 
-    cities = [i.to_dict for i in storage.all(cls='City').values()
+    cities = [i.to_dict for i in storage.all(City).values()
               if i.to_dict["state_id"] == state_id]
     if len(cities) < 1:
         return (redirect("/api/v1/nop"))
@@ -25,7 +25,7 @@ def all_cities(state_id):
 def get_city(city_id):
     """Return a City object with the specified id"""
 
-    city = storage.get('City', city_id)
+    city = storage.get(City, city_id)
     if city is None:
         return (redirect("/api/v1/nop"))
     return (jsonify(city.to_dict()))
@@ -37,7 +37,7 @@ def delete_city(city_id):
     """ Deletes the city object
     with the specified ID"""
 
-    city = storage.get('City', city_id)
+    city = storage.get(City, city_id)
     if city is None:
         return (redirect("/api/v1/nop"))
     storage.delete(city)
@@ -72,7 +72,7 @@ def update_city(city_id):
     """Update the City object with the
     specified ID"""
 
-    city = storage.get('City', city_id)
+    city = storage.get(City, city_id)
     if city is None:
         return (redirect("/api/v1/nop"))
     data = request.get_json()
