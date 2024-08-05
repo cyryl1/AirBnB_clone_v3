@@ -2,6 +2,7 @@
 """ RESTFUL API view for cities model """
 
 from models import storage
+from models.city import City
 from flask import jsonify, request
 from api.v1.views import app_views
 
@@ -27,7 +28,7 @@ def get_city(city_id):
     city = storage.get('City', city_id)
     if city is None:
         return (redirect("/api/v1/nop"))
-    return (jsonify(city))
+    return (jsonify(city.to_dict()))
 
 
 @app_views.route("/api/v1/cities/<city_id>",
@@ -60,4 +61,7 @@ def create_city(state_id):
         return (jsonify({
             "error": "Missing name"
             }), 400)
-    return 
+    model = City(data["name"])
+    model.save()
+    return (jsonify(model.to_dict()))
+
