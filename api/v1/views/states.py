@@ -4,9 +4,10 @@ Create a new view for State objects
 that handles all default RESTFul API actions
 """
 
-from flask import jsonify
+from flask import jsonify, redirect, request
 from api.v1.views import app_views
 from models import storage
+from models.state import State
 
 
 @app_views.route('/states')
@@ -15,23 +16,21 @@ def all_objects():
     retrieves the list of all state objects.
     """
     obj = storage.all(cls='State')
-    obj_list = [item for item in obj]
+    obj_list = [item.to_dict() for item in obj]
     return (obj_list)
 
 
-@app_views.route('/states/<state_id>')
+@app_views.route('/states/<state_id>', methods=['GET'])
 def state_objects(state_id):
     """
     retrieves State object
     """
     if (state_id):
         obj = storage.all(cls='State')
-        obj_list = [item for item in obj if state_id == item.id]
+        obj_list = [item for i7tem in obj if state_id == item.id]
         return (obj_list[0])
     else:
-        return (jsonify({
-            "error": "Not Found"
-            }))
+        return (redirect("/api/v1/nop"))
 
 
 @app_views.route('/states/<state_id>', methods=['DELETE'])
@@ -51,21 +50,22 @@ def handle_delete(state_id):
 
 @app_views.route('/states', methods=['POST'])
 def create_state():
-    request_data = request.get_json
     """
     Creates a new state
     """
-    if request.is_json:
-        data = request.get_json
+    if data.is_json:
+        data = request.get_json()
         state_id = data['id']
         if 'name' in data.keys():
-            storage.new(data)
-            state_obj = state_objects(state_id)
-            return (jsonify(state_obj), 201)
+            model = State(data)
+            model.save()
+
+#            storage.new(data)
+#            state_obj = state_objects(state_id)
+            return (jsonify(model.to_dict()), 201)
         else:
             return (jsonify({"error": "Missing name"}), 400)
-    else:
-        return (jsonify({
+    return (jsonify({
             "error": "Not a JSON"
             }), 400)
 
@@ -75,14 +75,12 @@ def update_states(state_id):
     """
     Updates the states obj
     """
-    if request.is_json:
-        data = request.get_json
-        for obj in storage.__objects:
-            if state_id == obj.id:
-                obj['name'] = data['name']
-                state_obj = state_objects(state_id)
-                return (jsonify(state_obj), 200)
-            else:
-                return (jsonify({"error": "Not Found"}))
+    if data.is_json:
+        data = request.get_json()
+        state = storage.get(State, state_id).to_dict()
+        if state is None:
+            return (redirect("/api/v1/nop"))
+        state['name'] = data['name']
+        return (jsonify(state), 200)
     else:
-        return (jsonify({"error": "Not a json"}), 404)
+        return (jsonify({"error": "Not a JSON"}), 400)
