@@ -6,7 +6,7 @@ that handles all default RESTFul API actions
 
 from flask import jsonify
 from api.v1.views import app_views
-from model import storage
+from models import storage
 
 
 @app_views.route('/states')
@@ -34,7 +34,7 @@ def state_objects(state_id):
             }))
 
 
-@app_views.route('/states/<state_id>', method=['DELETE'])
+@app_views.route('/states/<state_id>', methods=['DELETE'])
 def handle_delete(state_id):
     """
     deletes an object
@@ -49,7 +49,7 @@ def handle_delete(state_id):
         return (jsonify({"error": "Not Found"}), 200)
 
 
-@app_views.route('/states', method=['POST'])
+@app_views.route('/states', methods=['POST'])
 def create_state():
     request_data = request.get_json
     """
@@ -70,7 +70,7 @@ def create_state():
             }), 400)
 
 
-@app_views.route('states/<state_id>', method=['PUT'])
+@app_views.route('states/<state_id>', methods=['PUT'])
 def update_states(state_id):
     """
     Updates the states obj
