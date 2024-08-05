@@ -15,7 +15,7 @@ def all_objects():
     """
     retrieves the list of all state objects.
     """
-    obj = storage.all(cls='State')
+    obj = storage.all(cls='State').values()
     obj_list = [item.to_dict() for item in obj]
     return (obj_list)
 
@@ -27,7 +27,7 @@ def state_objects(state_id):
     """
     if (state_id):
         obj = storage.all(cls='State')
-        obj_list = [item for i7tem in obj if state_id == item.id]
+        obj_list = [item for item in obj if state_id == item.id]
         return (obj_list[0])
     else:
         return (redirect("/api/v1/nop"))
@@ -53,7 +53,7 @@ def create_state():
     """
     Creates a new state
     """
-    if data.is_json:
+    if request.is_json:
         data = request.get_json()
         state_id = data['id']
         if 'name' in data.keys():
@@ -70,12 +70,12 @@ def create_state():
             }), 400)
 
 
-@app_views.route('states/<state_id>', method=['PUT'])
+@app_views.route('/states/<state_id>', method=['PUT'])
 def update_states(state_id):
     """
     Updates the states obj
     """
-    if data.is_json:
+    if request.is_json:
         data = request.get_json()
         state = storage.get(State, state_id).to_dict()
         if state is None:

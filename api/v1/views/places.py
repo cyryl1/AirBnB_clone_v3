@@ -6,7 +6,7 @@ from models.place import Place
 from flask import jsonify, request, redirect
 from api.v1.views import app_views
 
-@app_views.route("cities/<city_id>/places", methods=['GET'])
+@app_views.route("/cities/<city_id>/places", methods=['GET'])
 def places(city_id):
     """
     Returnns all places with the specified
@@ -39,7 +39,7 @@ def delete_place(place_id):
     storage.delete(place)
     return({}, 200)
 
-@app_views.route("cities/<city_id>/places", methods=['POST'])
+@app_views.route("/cities/<city_id>/places", methods=['POST'])
 def create_place(city_id):
     """
     Creates a new place
@@ -55,7 +55,7 @@ def create_place(city_id):
         if user is None:
             return (redirect("/api/v1/nop"))
         if 'name' not in new_place.keys():
-            return (jsonify({"error": "name"}), 400)
+            return (jsonify({"error": "Missing name"}), 400)
 
         model = Place(new_place)
         model.save()
