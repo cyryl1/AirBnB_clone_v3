@@ -12,4 +12,4 @@ import json
 #first_state_id = list(storage.all(State).values())[0].id
 #print("First state: {}".format(storage.get(State, first_state_id)))
 
-print(f"\nALL CITY Objects\n {[i.to_dict()['state_id'] for i in storage.all(City).values()]}")
+print(f"\nALL CITY Objects\n {[i.to_dict() for i in storage.all(City).values()]}")
