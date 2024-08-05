@@ -5,17 +5,21 @@ A Flask applicaton
 
 from flask import Flask, jsonify
 from models import storage
-from api.v1.views import app_views
+import api.v1.views as view
+from flask_cors import CORS
 
 app = Flask(__name__)
-app.register_blueprint(app_views)
+CORS(app)
+app.register_blueprint(view.app_views)
+
 
 @app.teardown_appcontext
-def storage_close():
+def close_storage():
     """
-    calls the storage.calls method
+    calls the storage.close method
     """
     storage.close()
+
 
 @app.errorhandler(404)
 def _handle_api_error():
