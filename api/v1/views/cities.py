@@ -69,7 +69,7 @@ def create_city(state_id):
     data["state_id"] = state_id
     model = City(**data)
     model.save()
-    return (jsonify(model.to_dict()))
+    return (jsonify(model.to_dict()), 201)
 
 
 @app_views.route("/cities/<city_id>",
@@ -89,4 +89,4 @@ def update_city(city_id):
     data = request.get_json()
     setattr(city, "name", data["name"])
     city.save()
-    return (jsonify(city.to_dict()))
+    return (jsonify(city.to_dict()), 200)
