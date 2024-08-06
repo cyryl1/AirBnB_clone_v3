@@ -4,11 +4,11 @@
 
 from models import storage
 from models.amenity import Amenity
-from flask import jsonify, request
+from flask import jsonify, request, abort
 from api.v1.views import app_views
 
 
-@app_views.route("/api/v1/ameniities",
+@app_views.route("/amenities",
                  methods=["GET"])
 def get_amenities():
     """Return all Amenities Objects"""
@@ -17,7 +17,7 @@ def get_amenities():
     return (jsonify(amenities))
 
 
-@app_views.route("/api/v1/amenities/<amenity_id>",
+@app_views.route("/amenities/<amenity_id>",
                 methods=["GET"])
 def get_amenity(amenity_id):
     """Return the amenity with the
@@ -25,11 +25,11 @@ def get_amenity(amenity_id):
 
     amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
-        return (redirect("/api/v1/nop"))
+        return (abort(404))
     return (jsonify(amenity.to_dict()))
 
 
-@app_views.route("/api/v1/amenities/<amenity_id>",
+@app_views.route("/amenities/<amenity_id>",
                 methods=["DELETE"])
 def delete_amenity(amenity_id):
     """Delete the Amenity with the
@@ -37,32 +37,36 @@ def delete_amenity(amenity_id):
 
     amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
-        return (redirect("/api/v1/nop"))
-    storage.delete(amenity)
+        return (abort(404))
+    for k, v in storage.all(Amenity).items():
+        if v == amenity:
+            storage.delete(amenity)
+            storage.save()
     return ({}, 200)
 
 
-@app_views.route("/api/v1/amenities",
+@app_views.route("/amenities",
                  methods=["POST"])
 def create_amenity():
     """Creates a new amenity with the
     details in the request body"""
 
-    data = request.get_json()
-    if not data.is_json():
+    if not request.is_json:
         return (jsonify({
             "error": "Not a JSON"
             }), 400)
+
+    data = request.get_json()
     if "name" not in data.key():
         return (jsonify({
             "error": "Missing name"
             }), 400)
-    model = Amenity(data)
+    model = Amenity(**data)
     model.save()
     return (jsonify(model.to_dict()))
 
 
-@app_views.route("/api/v1/amenities/<amenity_id>",
+@app_views.route("/amenities/<amenity_id>",
                  methods=["PUT"])
 def update_amenity(amenity_id):
     """Update an Amenity with the specfied
@@ -70,12 +74,13 @@ def update_amenity(amenity_id):
 
     amenity = storage.get(Amenity, amenity_id)
     if amenity is None:
-        return (redirect("/api/v1/nop"))
-    data = request.get_json()
-    if not data.is_json():
+        return (abort(404))
+    if not request.is_json:
         return (jsonify({
             "error": "Nota a JSON"
             }), 400)
-    setattr(amenity, data["name"])
+
+    data = request.get_json()
+    setattr(amenity, "name", data["name"])
     amenity.save()
     return (jsonify(amenity.to_dict), 200)

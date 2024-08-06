@@ -57,7 +57,7 @@ def create_state():
         data = request.get_json()
         state_id = data['id']
         if 'name' in data.keys():
-            model = State(data)
+            model = State(**data)
             model.save()
 
 #            storage.new(data)
@@ -78,7 +78,7 @@ def update_states(state_id):
         data = request.get_json()
         state = storage.get(State, state_id).to_dict()
         if state is None:
-            return (redirect("/api/v1/nop"))
+            return (abort(404))
         state['name'] = data['name']
         return (jsonify(state), 200)
     else:

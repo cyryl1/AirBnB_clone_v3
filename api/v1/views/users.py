@@ -5,10 +5,10 @@
 from models import storage
 from models.user import User
 from api.v1.views import app_views
-from flask import jsonify, request
+from flask import jsonify, request, abort
 
 
-@app_views.route("/api/v1/users",
+@app_views.route("/users",
                  methods=["GET"])
 def get_users():
     """Returns all Users"""
@@ -17,7 +17,7 @@ def get_users():
     return (jsonify(users))
 
 
-@app_views.route("/api/v1/users/<user_id>",
+@app_views.route("/users/<user_id>",
                  methods=["GET"])
 def get_user(user_id):
     """Returns a user with the
@@ -25,34 +25,37 @@ def get_user(user_id):
 
     user = storage.get(User, user_id)
     if user is None:
-        return (redirect("/api/v1/nop"))
+        return (abort(404))
     return (jsonify(user.to_dict()))
 
 
-@app_views.route("/api/v1/users/<user_id>",
+@app_views.route("/users/<user_id>",
                  methods=["DELETE"])
 def delete_user(user_id):
-    """Delete the User objevt with
+    """Delete the User object with
     the specified user_id"""
 
     user = storage.get(User, user_id)
     if user is None:
-        return (redirect("/api/v1/nop"))
-    storage.delete(user)
+        return (abort(404))
+    for k, v in storage.all(User).items():
+        if v == user:
+            storage.delete(user)
+            storage.save()
     return ({}, 200)
 
 
-@app_views.route("/api/v1/users",
+@app_views.route("/users",
                  methods=["POST"])
 def create_user():
     """Creates a new User object from
     the request body"""
 
-    data = request.get_json()
-    if not data.is_json():
+    if not request.is_json:
         return (jsonify({
             "error": "Not a JSON"
             }), 400)
+    data = request.get_json()
     if "email" not in data.keys():
         return(jsonify({
             "error": "Missing email"
@@ -61,12 +64,12 @@ def create_user():
         return(jsonify({
             "error": "Missing password"
             }), 400)
-    model = User(data)
+    model = User(**data)
     model.save()
     return (jsonify(model.to_dict()), 200)
 
 
-@app_views.route("/api/v1/users/<user_id>",
+@app_views.route("/users/<user_id>",
                  methods=["PUT"])
 def update_user(user_id):
     """Update the User object with the
@@ -74,9 +77,9 @@ def update_user(user_id):
 
     user = storage.get(User, user_id)
     if user is None:
-        return (redirect("/api/v1/nop"))
-    data = request.get_json()
-    if not data.is_json():
+        return (abort(404))
+
+    if not request.is_json:
         return (jsonify({
             "error": "Not a JSON"
             }))
@@ -85,4 +88,4 @@ def update_user(user_id):
         if key not in ignore:
             setattr(user, key, val)
     user.save()
-    return (jsonify(user.to_dict()))
+    return (jsonify(user.to_dict()), 200)
