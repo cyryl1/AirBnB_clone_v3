@@ -4,22 +4,25 @@ A Flask applicaton
 """
 
 from flask import Flask, jsonify
-import storage
-import models
+from models import storage
 from api.v1.views import app_views
+from flask_cors import CORS
 
 app = Flask(__name__)
+CORS(app)
 app.register_blueprint(app_views)
 
+
 @app.teardown_appcontext
-def storage_close():
+def close_storage(exception=None):
     """
-    calls the storage.calls method
+    calls the storage.close method
     """
     storage.close()
 
+
 @app.errorhandler(404)
-def _handle_api_error():
+def _handle_api_error(error):
     """
     Returns a JSON-formatted 404 status code response
     """
