@@ -29,7 +29,7 @@ def _handle_api_error(error):
     error = {
             "error": "Not found"
             }
-    return jsonify(error)
+    return (jsonify(error), 4000)
 
 
 if __name__ == "__main__":
