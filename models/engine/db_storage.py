@@ -100,4 +100,3 @@ class DBStorage:
             return (len(self.all()))
         else:
             return (len(self.all(cls)))
-

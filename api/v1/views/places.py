@@ -13,9 +13,9 @@ def places(city_id):
     Returnns all places with the specified
     city_id"""
     obj = storage.all(cls="Place").values()
-    places = [item.to_dict() for item in obj 
+    places = [item.to_dict() for item in obj
               if item.to_dict['city_id'] == city_id]
-    
+
     if len(places) < 1:
         return(abort(404))
     return (jsonify(places))
@@ -64,7 +64,7 @@ def create_place(city_id):
             return (abort(404))
         if 'name' not in new_place.keys():
             return (jsonify({"error": "Missing name"}), 400)
-        
+
         new_place["city_id"] = city_id
         model = Place(**new_place)
         model.save()

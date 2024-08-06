@@ -12,7 +12,7 @@ from api.v1.views import app_views
 def all_cities(state_id):
     """Returns all Cities with
     the specified state_id"""
-    
+
     cities = [i.to_dict() for i in storage.all(City).values()
               if i.to_dict()["state_id"] == state_id]
     if len(cities) < 1:

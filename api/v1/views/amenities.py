@@ -18,7 +18,7 @@ def get_amenities():
 
 
 @app_views.route("/amenities/<amenity_id>",
-                methods=["GET"])
+                 methods=["GET"])
 def get_amenity(amenity_id):
     """Return the amenity with the
     specified amenity_id"""
@@ -30,7 +30,7 @@ def get_amenity(amenity_id):
 
 
 @app_views.route("/amenities/<amenity_id>",
-                methods=["DELETE"])
+                 methods=["DELETE"])
 def delete_amenity(amenity_id):
     """Delete the Amenity with the
     specified amenity_id"""

@@ -13,6 +13,7 @@ from models.state import State
 from models.user import User
 from models.review import Review
 
+
 @app_views.route("/status")
 def return_status():
     """

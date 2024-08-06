@@ -14,7 +14,7 @@ def reviews(place_id):
     place_id
     """
     obj = storage.all(Review).values()
-    reviews = [item.to_dict() for item in obj 
+    reviews = [item.to_dict() for item in obj
                if item.to_dict['place_id'] == place_id]
 
     if len(review) < 1:
@@ -32,6 +32,7 @@ def review(review_id):
         return (abort(404))
     return (jsonify(review.to_dict()))
 
+
 @app_views.route("/reviews/<review_id>", methods=['DELETE'])
 def delete_review(review_id):
     """
@@ -45,6 +46,7 @@ def delete_review(review_id):
             storage.delete(review)
             storage.save()
     return({}, 200)
+
 
 @app_views.route("/places/<place_id>/reviews", methods=['POST'])
 def create_review(place_id):
@@ -63,12 +65,13 @@ def create_review(place_id):
             return (abort(404))
         if 'text' not in new_place.keys():
             return (jsonify({"error": "Missing text"}), 400)
-        
+
         new_review["place_id"] = place_id
         model = Review(**new_review)
         model.save()
         return (jsonify(model), 201)
     return (jsonify({"error": "Not a JSON"}), 400)
+
 
 @app_views.route("/reviews/<review_id>", methods=['PUT'])
 def update_review(review_id):
