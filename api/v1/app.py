@@ -27,10 +27,10 @@ def _handle_api_error(error):
     Returns a JSON-formatted 404 status code response
     """
     error = {
-            "error": "Not at home!"
+            "error": "Not found"
             }
     return jsonify(error)
 
 
 if __name__ == "__main__":
-    app.run(host='0.0.0.0', port=5000, threaded=True, debug=True)
+    app.run(host='0.0.0.0', port=5000, threaded=True)
